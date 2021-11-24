@@ -1,8 +1,13 @@
 package com.example.ece464project;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
+import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
@@ -32,8 +37,8 @@ public class MainActivity extends AppCompatActivity {
         binding.appBarMain.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+//                Toast.makeText(getApplicationContext(), "Test", Toast.LENGTH_SHORT).show();
+                gotoDel();
             }
         });
         DrawerLayout drawer = binding.drawerLayout;
@@ -55,11 +60,41 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
+    @Override
+    public  boolean onOptionsItemSelected(MenuItem item){
+        int id = item.getItemId();
 
+        if(id == R.id.action_feedback){
+//            Intent in = new Intent(this,Feedback.class);
+//
+            Intent in = new Intent(this, Feedback.class);
+            startActivity(in);
+        }
+        else if(id == R.id.action_follow){
+            Uri uri = Uri.parse("http://instagram.com/_u/universityofcyprus");
+            Intent likeIng = new Intent(Intent.ACTION_VIEW, uri);
+
+            likeIng.setPackage("com.instagram.android");
+
+            try {
+                startActivity(likeIng);
+            } catch (ActivityNotFoundException e) {
+                startActivity(new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("http://instagram.com/universityofcyprus")));
+            }
+
+        }
+        return  super.onOptionsItemSelected(item);
+    }
     @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+
+    public void gotoDel(){
+        Intent in = new Intent(this,AddNoteActivity.class);
+        startActivity(in);
     }
 }
